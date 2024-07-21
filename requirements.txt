@@ -1,0 +1,5 @@
+flask
+flask-SQLAlchemy
+jinja2
+python-dotenv
+flask-restful

@@ -1,0 +1,69 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand ms-2" href={{ url_for('index') }}>
+        <img src="/static/bootstrap-logo.svg" alt="Logo" width="30" height="24" class="d-inline-block mb-2">
+        <text class="fw-semibold">InfluX</text>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <span>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          {% if session['user'] %}
+            {% if session['usertype']== 'admin' %}
+              <li class="nav-item">
+                <a class="nav-link" href={{url_for('info')}}>
+                <button type="button" class="btn btn-outline-light text-dark">Info</button>
+                </a>
+              </li>
+            {% endif %}
+            {% if session['usertype']== 'influencer' or session['usertype']== 'sponsor' %}
+            <li class="nav-item mx-2 fw-semibold" style="padding-top: 14px; padding-bottom: 14px;">
+                Welcome {{ session['user'] }}
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href={{url_for('profile')}}>
+              <button type="button" class="btn btn-outline-light text-dark">Profile</button>
+              </a>
+            </li>
+            {% endif %}
+            {% if session['usertype']== 'sponsor'%}
+            <li class="nav-item">
+              <a class="nav-link" href={{url_for('campaigns')}}>
+              <button type="button" class="btn btn-outline-light text-dark">Campaigns</button>
+              </a>
+            </li>
+            {% endif %}
+            {% if session['usertype'] %}
+            <li class="nav-item">
+              <a class="nav-link" href={{url_for('index')}}>
+              <button type="button" class="btn btn-outline-light text-dark">Explore</button>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href={{url_for('index')}}>
+              <button type="button" class="btn btn-outline-light text-dark">Statistics</button>
+              </a>
+            </li>  
+              <li class="nav-item">
+                <a class="nav-link" href={{url_for('logout')}}>
+                <button type="button" class="btn btn-outline-light text-dark">Logout</button>
+                </a>
+              </li>
+            {% endif %}
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href={{url_for('login')}}>
+              <button type="button" class="btn btn-outline-light text-dark">Login</button>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href={{url_for('register')}}>
+              <button type="button" class="btn btn-outline-success">Sign up</button>
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </span>
+    </div>
+  </nav>
