@@ -9,13 +9,12 @@
 
 {% block navbar %}{% endblock navbar %}
 <!-- Topbar -->
-<nav class="navbar bg-body-tertiary py-3">
-<div class="container-fluid">
-  <a class="navbar-brand ms-2" href={{ url_for('index') }}>
-    <img src="/static/bootstrap-logo.svg" alt="Logo" width="30" height="24" class="d-inline-block mb-2">
-    <text class="fw-semibold">InfluX</text>
-  </a>
-</div>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand ms-2" href="{{ url_for('index') }}" style="display: flex; align-items: center;">
+      <img src="/static/logo.svg" alt="Logo" style="height: 40px; width: auto;" class="d-inline-block">
+    </a>
+  </div>
 </nav>
 
 {% block content %}
@@ -36,21 +35,21 @@
             <input type="password" class="form-control" id="password" name="password" required>
         </div>
         <div class="mb-3 col-6">
-            <label for="password" class="form-label">Confirm Password</label>
-            <input type="password" class="form-control" id="comfirm_password" name="confirm_password" required>
+            <label for="confirm_password" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
         </div>
     </div>
     <div class="mb-3">
-      <label for="username" class="form-label">Brand Name</label>
+      <label for="brand_name" class="form-label">Brand Name</label>
       <input type="text" class="form-control" id="brand_name" name="brand_name" required>
     </div>
     <div class="mb-3">
-      <label for="username" class="form-label">Industry</label>
+      <label for="industry" class="form-label">Industry</label>
       <input type="text" class="form-control" id="industry" name="industry" required>
     </div>
     <div class="mb-3">
-      <label for="username" class="form-label">Budget</label>
-      <input type="text" class="form-control" id="budget" name="budget" required>
+      <label for="budget" class="form-label">Budget</label>
+      <input type="number" class="form-control" id="budget" name="budget" required>
     </div>
     <button type="submit" class="btn btn-primary">Sign Up</button>
   </form>

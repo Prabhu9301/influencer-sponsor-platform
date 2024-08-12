@@ -1,1 +1,138 @@
-<h2>Profile</h2>
+{% extends 'base.html' %}
+
+{% block title %} Profile · InfluX {% endblock title %}
+
+{% block content %}
+<h2 class="mt-3">Welcome <small class="text-muted">@{{ profile.name }}</small></h2>
+<hr>
+<!-- Profile card -->
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Profile</h5>
+        <p class="card-text">Name: @<b>{{ profile.name }}</b></p>
+        <p class="card-text">Category : {{ profile.category }}</p>
+        <p class="card-text">Niche : {{ profile.niche }}</p>
+    </div>
+</div>
+
+<!-- Active Campaigns -->
+<div class="container mt-4">
+    <h4 class="mb-3">Active Campaigns</h4>
+    {% if campaigns %}
+    <table class="table align-middle">
+        <thead class="bg-light">
+            <tr class="text-center">
+                <th>ID</th>
+                <th>Campaign Title</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            {% for item in campaigns %}
+            {% if item.request.status == 'accepted' %}
+            <tr class="text-center">
+                <td>{{loop.index}}</td>
+                <td>{{item.campaign.title.title()}}</td>
+                <td>{{item.campaign.category}}</td>
+                <td>
+                    <span class="badge bg-success d-inline">Active</span>
+                </td>
+                <td class="text-center align-middle">
+                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#viewModal{{ item.campaign.campaign_id }}">
+                        View
+                    </button>
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+
+<!-- Ad Requests -->
+<div class="container mt-5">
+    <h4 class="mb-3">New Requests</h4>
+    <!-- {% set has_pending_requests = False %} -->
+
+    {% if campaigns %}
+    {% for item in campaigns %}
+        {% if item.request.status == 'pending' %}
+        <!-- {% set has_pending_requests = True %} -->
+        <div class="card my-1">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div class="row w-100 mx-0">
+                    <div class="col-sm d-flex align-items-center">Campaign: {{item.campaign.title.title()}}</div>
+                    <div class="col-sm d-flex align-items-center">Category: {{item.campaign.category}}</div>
+                    <div class="col-sm d-flex align-items-center">Budget: ₹{{item.campaign.budget.quantize(1)}}</div>
+                    <div class="col-sm d-flex align-items-center">
+                        <span class="badge bg-warning">Pending</span>
+                    </div>
+                    <div class="col-sm-auto d-flex ms-auto">
+                        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#viewModal{{ item.campaign.campaign_id }}">
+                            View
+                        </button>
+                        <form action="{{ url_for('profile') }}" method="POST">
+                            <input type="hidden" name="campaign_id" value="{{item.campaign.campaign_id}}">
+                            <button class="btn btn-success btn-sm ms-2" type="submit" name="action" value="accept">Accept</button>
+                            <button class="btn btn-danger btn-sm" type="submit" name="action" value="reject">Reject</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+    
+        <!-- {% if has_pending_requests %}
+        <h5 class="mt-5 text-center">No new requests at the moment</h5>
+        {% endif %} -->
+    
+    {% else %}
+    <h5 class="mt-5 text-center">No new requests at the moment</h5>
+    {% endif %}
+</div>
+
+<!-- View Active Campaign Modal -->
+{% for item in campaigns %}
+<div class="modal fade" id="viewModal{{ item.campaign.campaign_id }}" tabindex="-1" aria-labelledby="viewModalLabel{{ item.campaign.campaign_id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="viewModalLabel{{ item.campaign.campaign_id }}">Campaign :  {{ item.campaign.title.title() }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <p class="fw-semibold">Description :  {{ item.campaign.description }}</p>
+                    <p>Goals :  {{ item.campaign.goals }}</p>
+                    <p class="text-warning fw-semibold">{{item.campaign.visibility.title()}} Campaign</p>
+                    <div class="col-md-6">
+                        <p>Category :  {{ item.campaign.category }}</p>
+                    </div>  
+                    <div class="col-md-6">
+                        <p>Budget :  ₹{{ item.campaign.budget.quantize(1) }}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Start Date :  {{ item.campaign.start_date.strftime("%d/%m/%Y") }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p>End Date :  {{ item.campaign.end_date.strftime("%d/%m/%Y") }}</p>
+                    </div>
+                </div>
+                {% if item.request.status ==  'accepted'%}
+                <div class="row">
+                    <p>Influencer :  @<b>{{ profile.name }}</b></p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock content %}

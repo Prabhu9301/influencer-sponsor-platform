@@ -1,0 +1,278 @@
+{% extends 'base.html' %}
+
+{% block title %} Explore · InfluX {% endblock title %}
+
+{% block content %}
+
+<!-- Admin's Explore Page -->
+{% if session['usertype'] == 'admin' %}
+<h2 class="mt-3"><small class="text-muted">Explore</small></h2>
+<hr>
+<div class="container">
+    <div class="row my-5 ">
+        <form class="d-flex justify-content-between" role="search">
+            <div class="col-md"><input class="form-control" type="search" placeholder="Search Campaigns or Influencers" name="search" id="search" data-search></div>
+            <div class="col-md-auto"><button class="btn btn-primary mx-2" type="submit"><i class="fas fa-search fa-xs"></i> Search</button></div>
+        </form>
+    </div>
+<!-- Search Results -->
+    <!-- Search Campaigns -->
+    {% for campaign in campaigns %}
+    <div class="card mx-4 my-3">
+        <div class="card-body d-flex justify-content-between align-items-center ms-4">
+            <div class="row w-100">
+                <div class="col-sm d-flex align-items-center">Campaign :  {{campaign.title.title()}}</div>
+                <div class="col-sm d-flex align-items-center">Category :  {{campaign.category}}</div>
+                <div class="col-sm d-flex align-items-center">{{campaign.visibility.title()}} Campaign</div>
+                <div class="col-sm-auto d-flex ms-auto">
+                    <button class="btn btn-warning btn-sm me-2" type="button" data-bs-toggle="modal" data-bs-target="#campaignModal{{ campaign.campaign_id }}">
+                        View
+                    </button>
+                    <form action="{{ url_for('flagCampaign') }}" method="POST" style="display: inline;">
+                        <input type="hidden" name="campaign_id" value="{{ campaign.campaign_id }}">
+                        <button type="submit" class="btn btn-danger btn-sm me-2">Flag as inappropriate</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <!-- Search Campaigns -->
+    <!-- Search Influencers -->
+    {% for influencer in influencers %}
+    <div class="card mx-4 my-3">
+        <div class="card-body d-flex justify-content-between align-items-center ms-4">
+            <div class="row w-100">
+                <div class="col-sm d-flex align-items-center">Influencer :  @{{influencer.name}}</div>
+                <div class="col-sm d-flex align-items-center">Category :  {{influencer.category}}</div>
+                <div class="col-sm d-flex align-items-center">Niche :  {{influencer.niche}}</div>
+                <div class="col-sm-auto d-flex ms-auto">
+                    <button class="btn btn-warning btn-sm me-2" type="button" data-bs-toggle="modal" data-bs-target="#profileModal{{ influencer.influencer_id }}">
+                        View
+                    </button>
+                    <form action="{{ url_for('flagUser') }}" method="POST" style="display: inline;">
+                        <input type="hidden" name="influencer_id" value="{{ influencer.influencer_id }}">
+                        <button type="submit" class="btn btn-danger btn-sm me-2">Flag as inappropriate</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <!-- Search Influencers -->
+<!-- Search Results -->
+</div>
+
+<!-- Sponsor's Explore Page -->
+{% elif session['usertype'] == 'sponsor' %}
+<h2 class="mt-3"><small class="text-muted">Search Influencers </small></h2>
+<hr>
+<div class="container">
+    <div class="row my-5">
+        <form class="d-flex justify-content-between" role="search">
+            <div class="col-md"><input class="form-control" type="search" placeholder="Search Influencers" name="search" id="search" data-search></div>
+            <div class="col-md-auto"><button class="btn btn-primary mx-2" type="submit"><i class="fas fa-search fa-xs"></i> Search</button></div>
+        </form>
+    </div>
+    <!-- Search Influencers -->
+    {% for influencer in influencers %}
+        <div class="card mx-4 my-3">
+            <div class="card-body d-flex justify-content-between align-items-center ms-4">
+                <div class="row w-100">
+                    <div class="col-sm d-flex align-items-center">Influencer :  @{{influencer.name}}</div>
+                    <div class="col-sm d-flex align-items-center">Category :  {{influencer.category}}</div>
+                    <div class="col-sm d-flex align-items-center">Niche :  {{influencer.niche}}</div>
+                    <div class="col-sm-auto d-flex ms-auto">
+                        <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#requestModal{{ influencer.influencer_id }}">
+                            Send Request
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    <!-- Search Influencers -->
+</div>
+
+<!-- Influencer's Explore Page -->
+{% elif session['usertype'] == 'influencer' %}
+<h2 class="mt-3"><small class="text-muted">Explore Campaigns</small></h2>
+<hr>
+<div class="container">
+    <div class="row my-5">
+        <form class="d-flex justify-content-between" role="search">
+            <div class="col-md"><input class="form-control" type="search" placeholder="Search Campaigns" name="search" id="search" data-search></div>
+            <div class="col-md-auto"><button class="btn btn-primary mx-2" type="submit"><i class="fas fa-search fa-xs"></i> Search</button></div>
+        </form>
+    </div>
+    <!-- Search Public Campaigns -->
+    {% for campaign in public %}
+        <div class="card mx-4 my-3">
+            <div class="card-body d-flex justify-content-between align-items-center ms-4">
+                <div class="row w-100">
+                    <div class="col-sm d-flex align-items-center">Campaign :  {{campaign.title.title()}}</div>
+                    <div class="col-sm d-flex align-items-center">Category :  {{campaign.category}}</div>
+                    <div class="col-sm d-flex align-items-center">Budget :  ₹{{campaign.budget.quantize(1)}}</div>
+                    <div class="col-sm-auto d-flex ms-auto">
+                        <button class="btn btn-warning btn-sm me-2" type="button" data-bs-toggle="modal" data-bs-target="#publicModal{{ campaign.campaign_id }}">
+                            View
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    <!-- Search Public Campaigns -->
+</div>
+{% endif %}
+
+
+<!-- View Public Campaign Modal -->
+{% for campaign in public %}
+<div class="modal fade" id="publicModal{{ campaign.campaign_id }}" tabindex="-1" aria-labelledby="publicModalLabel{{ campaign.campaign_id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="publicModalLabel{{ campaign.campaign_id }}">Campaign :  {{ campaign.title.title() }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <p class="fw-semibold">Description :  {{ campaign.description }}</p>
+                    <p>Goals :  {{ campaign.goals }}</p>
+                    <div class="col-md-6">
+                        <p>Category :  {{ campaign.category }}</p>
+                    </div>  
+                    <div class="col-md-6">
+                        <p>Budget :  ₹{{ campaign.budget.quantize(1) }}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Start Date :  {{ campaign.start_date.strftime("%d/%m/%Y") }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p>End Date :  {{ campaign.end_date.strftime("%d/%m/%Y") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- View Campaign Modal for Admin -->
+{% for campaign in campaigns %}
+<div class="modal fade" id="campaignModal{{ campaign.campaign_id }}" tabindex="-1" aria-labelledby="campaignModalLabel{{ campaign.campaign_id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="campaignModalLabel{{ campaign.campaign_id }}">Campaign :  {{ campaign.title.title() }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <p class="fw-semibold">Description :  {{ campaign.description }}</p>
+                    <p>Goals :  {{ campaign.goals }}</p>
+                    <p class="text-warning fw-semibold">{{ campaign.visibility.title() }} Campaign</p>
+                    <div class="col-md-6">
+                        <p>Category :  {{ campaign.category }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p>Budget :  ₹{{ campaign.budget.quantize(1) }}</p>
+                    </div>  
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Start Date :  {{ campaign.start_date.strftime("%d/%m/%Y") }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p>End Date :  {{ campaign.end_date.strftime("%d/%m/%Y") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- View Profile Modal -->
+{% for influencer in influencers %}
+<div class="modal fade" id="profileModal{{ influencer.influencer_id }}" tabindex="-1" aria-labelledby="profileModallLabel{{ influencer.influencer_id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="width: 21rem;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Profile</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <p>Name :  @<b>{{ influencer.name }}</b></p>
+                    <p>Category :  {{ influencer.category }}</p>
+                    <p>Niche :  {{ influencer.niche }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- Send Request Modal -->
+{% if session['usertype'] == 'sponsor' %}
+{% for influencer in influencers %}
+<div class="modal fade" id="requestModal{{ influencer.influencer_id }}" tabindex="-1" aria-labelledby="requestModalLabel{{ influencer.influencer_id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Send Ad Request for Campaign</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('send_request') }}" method="POST">
+                    <input type="hidden" name="influencer_id" value="{{ influencer.influencer_id }}">
+                <div class="row">
+                    <!-- <p>Request message to :  {{ influencer.name }}</p>  -->
+                    <div class="d-flex align-items-center">
+                        <p class="m-3">Request message to @{{ influencer.name }} for</p>
+                        <div class="col-sm-auto dropdown">
+                            <select name="campaign_id" id="campaign{{ influencer.influencer_id }}" class="form-select">
+                                {% for campaign in sponsor_campaign %}
+                                <option value="{{ campaign.campaign_id }}">{{ campaign.title.title() }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>                 
+                    <input type="text" class="my-2 form-control" id="message{{ influencer.influencer_id }}" name="message" required placeholder="Enter Request Message">
+                </div>
+            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+{% endblock content %}
+
+{% block script %}
+<!-- Search Filter -->
+<script>
+    const searchInput = document.querySelector("[data-search]");
+    
+    searchInput.addEventListener("input", (e) => {
+        const value = e.target.value;
+        const cards = document.querySelectorAll(".card");
+        cards.forEach((card) => {
+            card.classList.remove("d-none");
+            if (!card.textContent.toLowerCase().includes(value.toLowerCase())) {
+                card.classList.add("d-none");
+            }
+        });
+    });
+
+</script>
+{% endblock script %}

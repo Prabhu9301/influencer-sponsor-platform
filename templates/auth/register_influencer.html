@@ -9,13 +9,12 @@
 
 {% block navbar %}{% endblock navbar %}
 <!-- Topbar -->
-<nav class="navbar bg-body-tertiary py-3">
-<div class="container-fluid">
-  <a class="navbar-brand ms-2" href={{ url_for('index') }}>
-    <img src="/static/bootstrap-logo.svg" alt="Logo" width="30" height="24" class="d-inline-block mb-2">
-    <text class="fw-semibold">InfluX</text>
-  </a>
-</div>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand ms-2" href="{{ url_for('index') }}" style="display: flex; align-items: center;">
+      <img src="/static/logo.svg" alt="Logo" style="height: 40px; width: auto;" class="d-inline-block">
+    </a>
+  </div>
 </nav>
 
 {% block content %}
@@ -37,28 +36,28 @@
         </div>
         <div class="mb-3 col-6">
             <label for="confirm_password" class="form-label">Confirm Password</label>
-            <input type="password" class="form-control" id="comfirm_password" name="confirm_password" required>
+            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
         </div>
     </div>
     <label for="Text" class="form-label mb-4 me-5">Platform :</label>
     <div class="form-check form-check-inline">
-      <input class="form-check-input " type="checkbox" id="platform" value="youtube">
+      <input class="form-check-input " type="checkbox" id="platform_youtube" value="youtube">
       <label class="form-check-label" for="platform_youtube">YouTube</label>
     </div>
     <div class="form-check form-check-inline">
-      <input class="form-check-input " type="checkbox" id="platform" value="twitter">
+      <input class="form-check-input " type="checkbox" id="platform_twitter" value="twitter">
       <label class="form-check-label" for="platform_twitter">Twitter</label>
     </div>
     <div class="form-check form-check-inline">
-      <input class="form-check-input " type="checkbox" id="platform" value="instagram">
+      <input class="form-check-input " type="checkbox" id="platform_instagram" value="instagram">
       <label class="form-check-label" for="platform_instagram">Instagram</label>
     </div>
     <div class="mb-3">
-      <label for="username" class="form-label">Category</label>
+      <label for="category" class="form-label">Category</label>
       <input type="text" class="form-control" id="category" name="category" required>
     </div>
     <div class="mb-3">
-      <label for="username" class="form-label">Niche</label>
+      <label for="niche" class="form-label">Niche</label>
       <input type="text" class="form-control" id="niche" name="niche" required>
     </div>  
     <button type="submit" class="btn btn-primary">Sign Up</button>
