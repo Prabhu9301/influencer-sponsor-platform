@@ -40,10 +40,6 @@ def login():
         
         user = Users.query.filter_by(username=username).first()
 
-        if user.is_flagged:
-           flash('Your account has been flagged. Please contact admin')
-           return redirect(url_for('index'))
-
         if not user:
             flash('User not found')
             return redirect(url_for('login'))
@@ -51,6 +47,10 @@ def login():
         if password != user.password:
             flash('Incorrect Password')
             return redirect(url_for('login'))
+
+        if user.is_flagged:
+           flash('Your account has been flagged. Please contact admin')
+           return redirect(url_for('index'))
         
         session['user'] = user.username
         session['usertype'] = user.usertype

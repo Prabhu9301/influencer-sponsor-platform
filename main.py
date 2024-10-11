@@ -1,7 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask
 from application.config import Config
 from application.models import *
-from application.render import * 
 
 def create_app():
     app = Flask(__name__)
@@ -10,8 +9,9 @@ def create_app():
 
     with app.app_context():
         db.create_all()
-
-        if not Users.query.filter_by(username = 'admin').first():       # Adding Admin into the DB
+        
+        # Add Admin into the DB
+        if not Users.query.filter_by(username = 'admin').first():
             admin_user = Users(username = 'admin', password = 'admin', usertype = 'admin')
             db.session.add(admin_user)
         
